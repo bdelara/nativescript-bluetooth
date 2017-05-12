@@ -134,7 +134,7 @@ Bluetooth._MyGattCallback = android.bluetooth.BluetoothGattCallback.extend({
   onConnectionStateChange: function(bluetoothGatt, status, newState) {
     console.log("------- _MyGattCallback.onConnectionStateChange, status: " + status + ", new state: " + newState);
 
-    // https://github.com/don/cordova-plugin-ble-central/blob/master/src/android/Peripheral.java#L191    
+    // https://github.com/don/cordova-plugin-ble-central/blob/master/src/android/Peripheral.java#L191
     if (newState == 2 /* connected */ && status === 0 /* gatt success */) {
       console.log("---- discovering services..");
       bluetoothGatt.discoverServices();
@@ -479,7 +479,7 @@ Bluetooth._disconnect = function(gatt) {
 // note that this doesn't make much sense without scanning first
 Bluetooth.connect = function (arg) {
   return new Promise(function (resolve, reject) {
-    try { 
+    try {
       // or macaddress..
       if (!arg.UUID) {
         reject("No UUID was passed");
@@ -509,8 +509,11 @@ Bluetooth.connect = function (arg) {
 
         Bluetooth._connections[arg.UUID] = {
           state: 'connecting',
-          onConnected: arg.onConnected,
-          onDisconnected: arg.onDisconnected,
+          onConnected: function () {
+            arg.onConnected(bluetoothGatt);
+            resolve();
+          },
+          onDisconnected: arg.onDisconnected(bluetoothGatt),
           device: bluetoothGatt // TODO rename device to gatt?
         };
       }
