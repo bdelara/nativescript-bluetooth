@@ -227,6 +227,40 @@ var CBPeripheralDelegateImpl = (function (_super) {
 })(NSObject);
 
 
+/** New Stuff
+ * Creating a handler for Core Bluetooth Peripheral tasks incl.:
+ *  > Creating a tree of services & characteristics
+ *  > Advertise services & characteristics
+ *  >
+ */
+var CBPeripheralManagerDelegateImpl = (function (_super) {
+  __extends(CBPeripheralManagerDelegateImpl, _super);
+  function CBPeripheralManagerDelegateImpl() {
+    _super.apply(this, arguments);
+  }
+  CBPeripheralManagerDelegateImpl.new = function() {
+    return _super.new.call(this);
+  };
+  CBPeripheralManagerDelegateImpl.prototype.initWithCallback = function(callback) {
+    this._callback = callback;
+    return this;
+  };
+  // TODO: Inherit all of the members from:
+  // https://developer.apple.com/reference/corebluetooth/cbperipheralmanagerdelegate?language=objc
+  CBPeripheralManagerDelegateImpl.prototype.peripheralManagerDidUpdateState = function(peripheral) {
+    console.log('----- delegate peripheralManager:didUpdateState ' + JSON.stringify(peripheral));
+    console.log(JSON.stringify(CBPeripheralManagerStatePoweredOn));
+  };
+  CBPeripheralManagerDelegateImpl.prototype.peripheralManagerWillRestoreState = function() {};
+
+  CBPeripheralManagerDelegateImpl.prototype.peripherialManagerDidAddServiceError = function() {};
+  CBPeripheralManagerDelegateImpl.prototype.peripheralManagerDidStartAdvertisingError = function() {};
+
+  CBPeripheralManagerDelegateImpl.prototype.peripheralManagerDidReceiveReadRequest = function() {};
+  CBPeripheralManagerDelegateImpl.prototype.peripheralManagerDidReceiveWriteRequests = function() {};
+})(NSObject);
+
+
 var CBCentralManagerDelegateImpl = (function (_super) {
   __extends(CBCentralManagerDelegateImpl, _super);
   function CBCentralManagerDelegateImpl() {
