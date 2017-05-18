@@ -262,9 +262,9 @@ var CBCentralManagerDelegateImpl = (function (_super) {
       console.log("WARNING: This hardware does not support Bluetooth Low Energy.");
     }
   };
-  // CBCentralManagerDelegateImpl.prototype.centralManagerWillRestoreState = function(central, dict) {
-    // console.log("----- delegate centralManager:willRestoreState");
-  // };
+  CBCentralManagerDelegateImpl.prototype.centralManagerWillRestoreState = function(central, dict) {
+    console.log("----- delegate centralManager:willRestoreState");
+  };
   CBCentralManagerDelegateImpl.prototype.centralManagerDidConnectPeripheral = function(central, peripheral) {
     console.log("----- delegate centralManager:didConnectPeripheral: " + peripheral);
 
@@ -350,8 +350,8 @@ var CBPeripheralManagerDelegateImpl = (function (_super) {
   Bluetooth._state.centralDelegate = CBCentralManagerDelegateImpl.new().initWithCallback(function (obj) {
     console.log("----- centralDelegate obj: " + obj);
   });
-  // TODO options? https://github.com/randdusing/cordova-plugin-bluetoothle/blob/master/src/ios/BluetoothLePlugin.m#L187
-  Bluetooth._state.manager = CBCentralManager.alloc().initWithDelegateQueue(Bluetooth._state.centralDelegate, null);
+  // TODO options? https://github.com/randdusing/cordova-plugin-bluetoothle/blob/master/src/ios/BluetoothLePlugin.m#L167
+  Bluetooth._state.manager = CBCentralManager.alloc().initWithDelegateQueue(Bluetooth._state.centralDelegate, null, { CBCentralManagerOptionRestoreIdentifierKey: "centralManagerRestoreKey" });
 })();
 
 Bluetooth._isEnabled = function (arg) {
