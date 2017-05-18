@@ -263,9 +263,9 @@ var CBCentralManagerDelegateImpl = (function (_super) {
     }
   };
   // TODO: implement restore state key
-  CBCentralManagerDelegateImpl.prototype.centralManagerWillRestoreState = function(central, dict) {
-    console.log("----- delegate centralManager:willRestoreState");
-  };
+  // CBCentralManagerDelegateImpl.prototype.centralManagerWillRestoreState = function(central, dict) {
+  //   console.log("----- delegate centralManager:willRestoreState");
+  // };
   CBCentralManagerDelegateImpl.prototype.centralManagerDidConnectPeripheral = function(central, peripheral) {
     console.log("----- delegate centralManager:didConnectPeripheral: " + peripheral);
 
@@ -352,8 +352,10 @@ var CBPeripheralManagerDelegateImpl = (function (_super) {
     console.log("----- centralDelegate obj: " + obj);
   });
   // TODO options? https://github.com/randdusing/cordova-plugin-bluetoothle/blob/master/src/ios/BluetoothLePlugin.m#L167
-  Bluetooth._state.manager = CBCentralManager.alloc().initWithDelegateQueueOptions(Bluetooth._state.centralDelegate, null, { CBCentralManagerOptionRestoreIdentifierKey: "centralManagerRestoreKey" });
-  // Bluetooth._state.manager = CBCentralManager.alloc().initWithDelegateQueue(Bluetooth._state.centralDelegate, null);
+  // TODO: need to pass in options:@{ CBCentralManagerOptionRestoreIdentifierKey: @"myCentralManagerIdentifier" }
+  //       to initWithDelegateQueueOptions() as type (NSDictionary<NSString *,id> *)
+  // Bluetooth._state.manager = CBCentralManager.alloc().initWithDelegateQueueOptions(Bluetooth._state.centralDelegate, null, { CBCentralManagerOptionRestoreIdentifierKey: "centralManagerRestoreKey" });
+  Bluetooth._state.manager = CBCentralManager.alloc().initWithDelegateQueue(Bluetooth._state.centralDelegate, null);
 })();
 
 Bluetooth._isEnabled = function (arg) {
