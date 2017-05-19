@@ -476,6 +476,16 @@ Bluetooth._disconnect = function(gatt) {
   }
 };
 
+Bluetooth.createBond = function (arg){
+  var bluetoothGatt = Bluetooth._connections[arg.UUID].device;
+  console.log("BOND STATE: " + bluetoothGatt.getDevice().getBondState());
+
+  if (bluetoothGatt.getDevice().getBondState() == android.bluetooth.BluetoothDevice.BOND_NONE) {  
+    bluetoothGatt.getDevice().createBond();
+    while (bluetoothGatt.getDevice().getBondState() != android.bluetooth.BluetoothDevice.BOND_BONDED) {}
+  }
+};
+
 // note that this doesn't make much sense without scanning first
 Bluetooth.connect = function (arg) {
   return new Promise(function (resolve, reject) {
@@ -509,6 +519,7 @@ Bluetooth.connect = function (arg) {
 
         Bluetooth._connections[arg.UUID] = {
           state: 'connecting',
+
           onConnected: function () {
             arg.onConnected(bluetoothGatt);
             resolve();
