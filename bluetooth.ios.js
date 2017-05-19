@@ -355,7 +355,8 @@ var CBPeripheralManagerDelegateImpl = (function (_super) {
   // TODO: need to pass in options:@{ CBCentralManagerOptionRestoreIdentifierKey: @"myCentralManagerIdentifier" }
   //       to initWithDelegateQueueOptions() as type (NSDictionary<NSString *,id> *)
   var options = new NSDictionary();
-  options.setValue("restoreKey").forKey("CBCentralManagerOptionRestoreIdentifierKey");
+  options.dictionaryWithObjectsAndKeys(CBCentralManagerOptionRestoreIdentifierKey, "restoreKey");
+  // options.setValue("restoreKey").forKey("CBCentralManagerOptionRestoreIdentifierKey");
   Bluetooth._state.manager = CBCentralManager.alloc().initWithDelegateQueueOptions(Bluetooth._state.centralDelegate, null, options);
   // Bluetooth._state.manager = CBCentralManager.alloc().initWithDelegateQueue(Bluetooth._state.centralDelegate, null);
 })();
