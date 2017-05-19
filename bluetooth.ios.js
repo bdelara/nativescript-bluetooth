@@ -354,10 +354,10 @@ var CBPeripheralManagerDelegateImpl = (function (_super) {
   // TODO options? https://github.com/randdusing/cordova-plugin-bluetoothle/blob/master/src/ios/BluetoothLePlugin.m#L167
   // TODO: need to pass in options:@{ CBCentralManagerOptionRestoreIdentifierKey: @"myCentralManagerIdentifier" }
   //       to initWithDelegateQueueOptions() as type (NSDictionary<NSString *,id> *)
-  var options = new NSDictionary();
-  options.dictionaryWithObjectsAndKeys(CBCentralManagerOptionRestoreIdentifierKey, "restoreKey");
-  // options.setValue("restoreKey").forKey("CBCentralManagerOptionRestoreIdentifierKey");
+  var options = NSDictionary.dictionaryWithObjectsAndKeys(CBCentralManagerOptionRestoreIdentifierKey, "restoreKey");
   Bluetooth._state.manager = CBCentralManager.alloc().initWithDelegateQueueOptions(Bluetooth._state.centralDelegate, null, options);
+
+  // Old
   // Bluetooth._state.manager = CBCentralManager.alloc().initWithDelegateQueue(Bluetooth._state.centralDelegate, null);
 })();
 
