@@ -480,11 +480,44 @@ Bluetooth.createBond = function (arg){
   var bluetoothGatt = Bluetooth._connections[arg.UUID].device;
   console.log("BOND STATE: " + bluetoothGatt.getDevice().getBondState());
 
-  if (bluetoothGatt.getDevice().getBondState() == android.bluetooth.BluetoothDevice.BOND_NONE) {  
+  if (bluetoothGatt.getDevice().getBondState() == android.bluetooth.BluetoothDevice.BOND_NONE) {
     bluetoothGatt.getDevice().createBond();
     while (bluetoothGatt.getDevice().getBondState() != android.bluetooth.BluetoothDevice.BOND_BONDED) {}
   }
 };
+
+// Advertise the android device with the UUID
+Bluetooth.advertise = function(advID) {
+  
+    var advertiser = adapter.getBluetoothLeAdvertiser();
+    var settingsBuilder = new android.bluetooth.le.AdvertiseSettings.Builder();
+    settingsBuilder.setAdvertiseMode( android.bluetooth.le.AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY )
+    settingsBuilder.setTxPowerLevel( android.bluetooth.le.AdvertiseSettings.ADVERTISE_TX_POWER_HIGH )
+    settingsBuilder.setConnectable(true);
+
+    var settings = settingsBuilder.build();
+
+    //advertise data
+    var advertiseBuilder = new android.bluetooth.le.AdvertiseData.Builder();
+    advertiseBuilder.setIncludeDeviceName( true )
+    advertiseBuilder.setIncludeTxPowerLevel(true)
+
+    var data = advertiseBuilder.build();
+  
+    //scan result
+    var advertiseBuilderForUuid = new android.bluetooth.le.AdvertiseData.Builder();
+    if (advID != null){
+        var advId = new android.os.ParcelUuid(Bluetooth._stringToUuid(advID));
+        advertiseBuilderForUuid.addServiceUuid(advId)
+    }
+
+    var scanData = advertiseBuilderForUuid.build();
+    var advertiseCallbackDef = android.bluetooth.le.AdvertiseCallback.extend({});
+    var advertiseCallback = new advertiseCallbackDef();
+
+    advertiser.startAdvertising( settings, data, scanData, advertiseCallback );
+    console.log( "Advertising started" );
+}
 
 // note that this doesn't make much sense without scanning first
 Bluetooth.connect = function (arg) {
@@ -546,8 +579,7 @@ Bluetooth.disconnect = function (arg) {
       if (!connection) {
         reject("Peripheral wasn't connected");
         return;
-      }
-
+      } 
       Bluetooth._disconnect(connection.device);
       resolve();
     } catch (ex) {
