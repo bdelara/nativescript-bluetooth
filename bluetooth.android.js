@@ -5,7 +5,8 @@ var Bluetooth = require("./bluetooth-common");
 var ACCESS_COARSE_LOCATION_PERMISSION_REQUEST_CODE = 222;
 
 var adapter,
-    onDiscovered;
+    onDiscovered,
+    advertiseCallback;
 
 Bluetooth._coarseLocationPermissionGranted = function () {
   var hasPermission = android.os.Build.VERSION.SDK_INT < 23; // Android M. (6.0)
@@ -486,9 +487,9 @@ Bluetooth.createBond = function (arg){
   }
 };
 
+
 // Advertise the android device with the UUID
 Bluetooth.advertise = function(advID) {
-  
     var advertiser = adapter.getBluetoothLeAdvertiser();
     var settingsBuilder = new android.bluetooth.le.AdvertiseSettings.Builder();
     settingsBuilder.setAdvertiseMode( android.bluetooth.le.AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY )
@@ -513,10 +514,16 @@ Bluetooth.advertise = function(advID) {
 
     var scanData = advertiseBuilderForUuid.build();
     var advertiseCallbackDef = android.bluetooth.le.AdvertiseCallback.extend({});
-    var advertiseCallback = new advertiseCallbackDef();
+    advertiseCallback = new advertiseCallbackDef();
 
     advertiser.startAdvertising( settings, data, scanData, advertiseCallback );
     console.log( "Advertising started" );
+}
+
+Bluetooth.stopAdvertise = function () {
+    var advertiser = adapter.getBluetoothLeAdvertiser();
+    advertiser.stopAdvertising( advertiseCallback );
+    console.log("Advertising stopped");
 }
 
 // note that this doesn't make much sense without scanning first
