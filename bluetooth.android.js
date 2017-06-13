@@ -511,9 +511,12 @@ Bluetooth.connect = function (arg) {
           state: 'connecting',
           onConnected: function () {
             arg.onConnected(bluetoothGatt);
-            resolve();
+            resolve('connected');
           },
-          onDisconnected: arg.onDisconnected(bluetoothGatt),
+          onDisconnected: function () {
+            arg.onDisconnected(bluetoothGatt);
+            resolve('disconnected');
+          },
           device: bluetoothGatt // TODO rename device to gatt?
         };
       }

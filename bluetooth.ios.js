@@ -419,10 +419,13 @@ Bluetooth.connect = function (arg) {
       } else {
         console.log("Connecting to peripheral with UUID: " + arg.UUID);
         Bluetooth._state.manager.connectPeripheralOptions(peripheral, null);
-        Bluetooth._state.disconnectCallbacks[arg.UUID] = arg.onDisconnected(peripheral);
+        Bluetooth._state.disconnectCallbacks[arg.UUID] = function () {
+          arg.onDisconnected(peripheral);
+          resolve('disconnected');
+        };
         Bluetooth._state.connectCallbacks[arg.UUID] = function () {
           arg.onConnected(peripheral);
-          resolve();
+          resolve('connected');
         };
       }
     } catch (ex) {
