@@ -514,7 +514,7 @@ Bluetooth.connect = function (arg) {
             resolve('connected');
           },
           onDisconnected: function () {
-            arg.onDisconnected(bluetoothGatt);
+            arg.onDisconnected();
             resolve('disconnected');
           },
           device: bluetoothGatt // TODO rename device to gatt?
@@ -539,9 +539,14 @@ Bluetooth.disconnect = function (arg) {
         reject("Peripheral wasn't connected");
         return;
       }
-
+      Bluetooth._connections[arg.UUID] = {
+        onDisconnected: function () {
+          arg.onDisconnected();
+          resolve('disconnected');
+        }
+      };
       Bluetooth._disconnect(connection.device);
-      resolve();
+      // resolve();
     } catch (ex) {
       console.log("Error in Bluetooth.disconnect: " + ex);
       reject(ex);
