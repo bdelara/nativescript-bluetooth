@@ -451,13 +451,17 @@ Bluetooth.disconnect = function (arg) {
         reject("Could not find peripheral with UUID " + arg.UUID);
       } else {
         console.log("Disconnecting peripheral with UUID: " + arg.UUID);
+        Bluetooth._state.disconnectCallbacks[arg.UUID] = function () {
+          arg.onDisconnected(peripheral);
+          resolve('disconnected');
+        };
         // no need to send an error when already disconnected, but it's wise to check it
         if (peripheral.state != CBPeripheralStateDisconnected) {
           Bluetooth._state.manager.cancelPeripheralConnection(peripheral);
           peripheral.delegate = null;
           // TODO remove from the peripheralArray as well
         }
-        resolve();
+        // resolve();
       }
     } catch (ex) {
       console.log("Error in Bluetooth.disconnect: " + ex);

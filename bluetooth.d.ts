@@ -29,6 +29,11 @@ declare module "nativescript-bluetooth" {
        * The UUID of the peripheral to disconnect from.
        */
       UUID: string;
+      
+      /**
+       * Once the peripheral is disconnected this callback function is invoked.
+       */
+      onDisconnected: (data: Peripheral) => void;
     }
 
     /**
